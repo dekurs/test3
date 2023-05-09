@@ -1,0 +1,16 @@
+{
+  "name": "api_expressjs",
+  "version": "1.0.0",
+  "description": "api_expressjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "author": "Dedi Kurniawan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.3.0",
+    "nodemon": "^2.0.22"
+  }
+}
