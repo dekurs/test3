@@ -1,11 +1,27 @@
 const usersModel = require('../models/users')
 
-const crateNewUser = (req, res) => {
-    console.log(req.body)
-    res.json({
-        message: 'CREATE new user success',
-        data: req.body
-    })
+const crateNewUser = async (req, res) => {
+    const {body} = req
+    
+    if (!body.name || !body.email || !body.address) {
+        return res.status(400).json({
+            message: "Mohon lengkapi data anda",
+            data: null
+        })
+    }
+
+    try {
+        await usersModel.createNewUser(body)
+        res.status(201).json({
+            message: 'CREATE new user success',
+            data: body
+        })
+    } catch {
+        res.status(500).json({
+            message: 'server error',
+            serverMessage: error,
+        })  
+    }
 }
 
 const getAllUsers = async (req, res) => {
@@ -19,31 +35,48 @@ const getAllUsers = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             message: 'server error',
-            data: data
+            serverMessage: error,
         })      
     }
     
 }
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
     const {id} = req.params
-    console.log('id :', id)
-    res.json({
-        message: 'UPDATE user success'
-    })
+    const {body} = req
+    try {
+        await usersModel.updateUser(body, id)
+
+        res.json({
+            message: 'UPDATE users success',
+            data: {
+                id: id,
+                ...body
+            }
+        })      
+    } catch (error) {
+        res.status(500).json({
+            message: 'server error',
+            serverMessage: error,
+        })      
+    }
 }
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
     const {id} = req.params
-    res.json({
-        message: 'DELETE user success',
-        data: {
-            id: id,
-            name: "Dedi Kurniawan",
-            email: "krn.dedi@gmail",
-            address: "Tangerang"
-        }
-    })
+    try {
+        await usersModel.deleteUser(id)
+        res.json({
+            message: 'DELETE user success',
+            data: null
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'server error',
+            serverMessage: error,
+        })      
+    }
+    
 }
 
 module.exports = {
